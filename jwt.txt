@@ -1,0 +1,9 @@
+___ JWT ____
+veri json formatında taşınıyor
+token ring => bir çember içerisinde nodelar arasında verinin taşınması ve her node'un ihtiyacı olan veriyi alması.
+token iki tarafın birbirini tanımasını sağlar (örn: madalyon)
+headerda token gönderilince client'dan, server'e, bilgiye erişir.
+
+1. client -> header (login)
+2. header -> client (token)
+3. client -> header (token header'da)
