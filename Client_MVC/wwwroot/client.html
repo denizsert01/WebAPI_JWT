@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login</title>
+    
+    <script>
+
+        /// token geldiyse doğru kullanıcı
+
+        async function getToken(event) {
+            event.preventDefault(); // Formun varsayılan gönderimini engeller
+
+            let result = await fetch("http://localhost:5113/api/Login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(getLoginObject())
+            }).then(response => response.text());
+
+            if (result.indexOf("401")>0)
+                alert("Kullanıcı adi veya şifre yanlış...");
+            else {
+                // Token geldiyse;
+                // Bearerdan sonra 1 boşluk mutlaka bırakılmalı yoksa hata verir
+                //sessionStorage.setItem("jwtToken", "Bearer " + result);
+                localStorage.setItem("jwtToken", "Bearer " + result);
+            }
+            return false;
+            
+        }
+
+        function getLoginObject() {
+            const name = document.getElementById("username").value;
+            const pwd = document.getElementById("password").value;
+
+            return { username: name, password: pwd } 
+        }
+
+
+        async function getProductData() {
+            //let token = sessionStorage.getItem("jwtToken");
+            let token = localStorage.getItem("jwtToken");
+            let data;
+            await fetch("http://localhost:5113/api/Product",
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token
+                    }
+                }).then(x => x.text()).then(x => alert(x));
+        }
+    </script>
+</head>
+<body>
+
+    <form id="loginForm" onsubmit="getToken(event)">
+        <label for="username">Kullanıcı Adı</label>
+        <!-- normalde value olarak verilmez ama pratik denemek için yaptık-->
+        <input type="text" id="username" name="username" value="cevdo" required />
+
+        <label for="password">Şifre</label>
+        <input type="password" id="password" name="password" value="ceVdo_123" required />
+
+        <button type="submit">Login</button> <!-- type="submit" ile butonun doğru çalışması sağlanır -->
+    </form>
+
+    <br />
+    <br />
+    <button onclick="getProductData()">Get Product Data</button>
+
+</body>
+</html>
