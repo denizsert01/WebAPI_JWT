@@ -1,1 +1,1 @@
-WebAPI project using JWT
+WebAPI project using JWT and MVC
